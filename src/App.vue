@@ -1,92 +1,40 @@
 <script setup>
-import { reactive, ref, computed } from 'vue'
+import { ref } from 'vue'
+import HelloMessage from './components/HelloMessage.vue'
+import CounterText from './components/CounterText.vue'
+import GreenText from './components/GreenText.vue'
+import Counter from './components/Counter.vue'
+import Form from './components/Form.vue'
+import FormModel from './components/FormModel.vue'
+import ToggleButton from './components/ToggleButton.vue'
+import Todo from './components/Todo.vue'
+import MountedText from './components/MountedText.vue'
+import Watchers from './components/Watchers.vue'
+import ChildCompComponents from './components/ChildCompComponents.vue'
+import ChildCompProps from './components/ChildCompProps.vue'
+import ChildCompEmits from './components/ChildCompEmits.vue'
+import ChildCompSlots from './components/ChildCompSlots.vue'
 
-const textHeader = ref('hello')
-const titleClass = ref('title')
-
-const counter = reactive({ count: 5 })
-const count = ref(0)
-
-const text = ref('')
-
-const awesome = ref(true)
-
-function toggle() {
-  awesome.value = !awesome.value
-}
-
-function onInput(e) {
-  text.value = e.target.value
-}
-
-function increment() {
-  count.value++
-}
-
-
-let id = 0
-const newTodo = ref('')
-const hideCompleted = ref(false)
-const todos = ref([
-  { id: id++, text: 'Learn HTML', done: true },
-  { id: id++, text: 'Learn JavaScript', done: true },
-  { id: id++, text: 'Learn Vue', done: false }
-])
-
-const filteredTodos = computed(() => {
-  return hideCompleted.value ? todos.value.filter((t) => !t.done) : todos.value
-})
-
-function addTodo() {
-  todos.value.push({ id: id++, text: newTodo.value, done: false })
-  newTodo.value = ''
-}
-
-function removeTodo(todo) {
-  todos.value = todos.value.filter((t) => t !== todo)
-}
-
+const propsGreeting = ref('hello from parent')
+const emitChildMsg = ref('no child msg yet')
+const slotMessage = ref('from parent')
 </script>
 
 <template>
-  <h1 :class="titleClass">{{ textHeader }}</h1>
-
-  <p>Count is: {{ counter.count }}</p>
-  <button @click="increment">count is: {{ count }}</button>
-
+  <HelloMessage />
+  <CounterText />
+  <GreenText />
+  <Counter />
   <br><br>
-
-  <input :value="text" @input="onInput" placeholder="Type here">
-  <p>{{ text }}</p>
-
-  <button @click="toggle">toggle</button>
-  <h2 v-if="awesome">Vue is awesome!</h2>
-  <h2 v-else>Oh no 😢</h2>
-
-
-  <form @submit.prevent="addTodo">
-    <input v-model="newTodo">
-    <button>Add Todo</button>
-  </form>
-  <ul>
-    <li v-for="todo in filteredTodos" :key="todo.id">
-      <input type="checkbox" v-model="todo.done">
-      <span :class="{ done: todo.done }">{{ todo.text }}</span>
-      <button @click="removeTodo(todo)">X</button>
-    </li>
-  </ul>
-  <button @click="hideCompleted = !hideCompleted">
-    {{ hideCompleted ? 'Show all' : 'Hide completed' }}
-  </button>
-
-
+  <Form />
+  <FormModel />
+  <ToggleButton />
+  <Todo />
+  <MountedText />
+  <Watchers />
+  <ChildCompComponents />
+  <ChildCompProps :msg="propsGreeting" />
+  <ChildCompEmits @response="(emitMessage) => emitChildMsg = emitMessage" />
+  <p>{{ emitChildMsg }}</p>
+  <ChildCompSlots>Message: {{ slotMessage }}</ChildCompSlots>
 </template>
-
-<style>
-.title {
-  color: blue;
-}
-.done {
-  text-decoration: line-through;
-}
-</style>
